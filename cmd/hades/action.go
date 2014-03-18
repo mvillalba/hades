@@ -1,8 +1,8 @@
 package main
 
-import "database/sql"
+import "github.com/mvillalba/hades"
 
-type actionFunc func(*sql.DB, []string) error
+type actionFunc func(hades.LicenseDatastore, []string) error
 
 // [CLASS][ACTION] -> fn()
 var actionMap = map[string]map[string]actionFunc {

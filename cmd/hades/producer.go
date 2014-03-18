@@ -6,9 +6,10 @@ import (
     "bytes"
     "io/ioutil"
     "database/sql"
+    "github.com/mvillalba/hades"
 )
 
-func producerCreateAction(db *sql.DB, args []string) error {
+func producerCreateAction(db hades.LicenseDatastore, args []string) error {
     // Args
     if len(args) < 2 { usage() }
     slug := args[0]
@@ -22,14 +23,11 @@ func producerCreateAction(db *sql.DB, args []string) error {
     if err != nil { return err }
 
     // Store
-    _, err = db.Exec("INSERT INTO producers(id, name, key, created, comment) VALUES (?, ?, ?, ?, ?)",
-                     slug, name, key.Pretty(), timestamp, comment)
-    if err != nil { return err }
 
     return nil
 }
 
-func producerListAction(db *sql.DB, args []string) error {
+func producerListAction(db hades.LicenseDatastore, args []string) error {
     // Args
     if len(args) != 0 { usage() }
 
@@ -51,7 +49,7 @@ func producerListAction(db *sql.DB, args []string) error {
     return nil
 }
 
-func producerDumpActionImpl(db *sql.DB, args[]string) ([]byte, error) {
+func producerDumpActionImpl(db hades.LicenseDatastore, args[]string) ([]byte, error) {
     // Args
     if len(args) < 1 { usage() }
 
@@ -79,14 +77,14 @@ func producerDumpActionImpl(db *sql.DB, args[]string) ([]byte, error) {
     return buf.Bytes(), nil
 }
 
-func producerDumpAction(db *sql.DB, args []string) error {
+func producerDumpAction(db hades.LicenseDatastore, args []string) error {
     output, err := producerDumpActionImpl(db, args)
     if err != nil { return err }
     fmt.Println(string(output))
     return nil
 }
 
-func producerExportAction(db *sql.DB, args []string) error {
+func producerExportAction(db hades.LicenseDatastore, args []string) error {
     if len(args) < 2 { usage() }
     output, err := producerDumpActionImpl(db, args[1:])
     if err != nil { return err }
